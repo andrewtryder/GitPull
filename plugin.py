@@ -28,31 +28,42 @@ class GitPull(callbacks.Plugin):
     This should describe *how* to use this plugin."""
     threaded = True
 
-    def gitpull(self, irc, msg, args, repodir):
+    def updateplugin(self, irc, msg, args, repodir):
         """<plugin>
 
         Do a git pull on a plugin directory.
+        Ex: upgradeplugin GitPull
         """
 
-        plugindirs = conf.supybot.directories.plugins()[:]
-        dirdict = {}
-        for plugindir in plugindirs:
-            dirfiles = os.listdir(plugindir)
-            for dirfile in dirfiles:
-                if os.path.isdir(os.path.join(plugindir, dirfile)):
-                    dirdict[dirfile] = os.path.join(plugindir, dirfile)
-
-        # validate.
+        # make our "dict" of valid plugins/dictionaries
+        plugindirs = conf.supybot.directories.plugins()[:]  # list of valid dirs.
+        dirdict = {}  # dict for our output. key = PluginName, value = directory.
+        for plugindir in plugindirs:  # for each "plugin" dir.
+            dirfiles = os.listdir(plugindir)  # get a list of files in each dir.
+            for dirfile in dirfiles:  # iterate over each dir.
+                if os.path.isdir(os.path.join(plugindir, dirfile)):  # if they're directories.
+                    dirdict[dirfile] = os.path.join(plugindir, dirfile)  # add into the dict.
+        # validate input.
         if repodir not in dirdict:
             irc.reply("ERROR: '{0}' is an invalid plugin. Valid: {1}".format(repodir, " | ".join(sorted(dirdict.keys()))))
             return
         # we're valid from here on.
-        pipe = subprocess.Popen(['git', 'pull'], shell=True, cwd=dirdict[repodir], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        cwd = dirdict[repodir]  # cwd has to be the dir (in the value)
+        command = ["git", "pull"]
+        # run the command.
+        pipe = subprocess.Popen(command, shell=False, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (out, error) = pipe.communicate()
         return_code = pipe.wait()
-        irc.reply("{0} :: {1}".format(out, error))
+        if return_code == 0:  # command worked.
+            out = out.replace('\n', ' ')  # replace newlines to spaces.
+            out = utils.str.normalizeWhitespace(out)  # have no doublespaces.
+            irc.reply("{0} :: {1}".format(repodir, out))
+        else:  # error.
+            error = error.replace('\n', ' ')  # replace newlines to spaces.
+            error = utils.str.normalizeWhitespace(error)  # make sure no doublespaces.
+            irc.reply("ERROR :: {0} :: {1}".format(repodir, error))
 
-    gitpull = wrap(gitpull, [('checkCapability', 'admin'), ('somethingWithoutSpaces')])
+    updateplugin = wrap(updateplugin, [('checkCapability', 'owner'), ('somethingWithoutSpaces')])
 
 Class = GitPull
 

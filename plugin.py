@@ -55,9 +55,14 @@ class GitPull(callbacks.Plugin):
         (out, error) = pipe.communicate()
         return_code = pipe.wait()
         if return_code == 0:  # command worked.
-            out = out.replace('\n', ' ')  # replace newlines to spaces.
-            out = utils.str.normalizeWhitespace(out)  # have no doublespaces.
-            irc.reply("{0} :: {1}".format(repodir, out))
+            outlines = out.split('\n')  # split on newlines into list.
+            if len(outlines) > 6:  # more than six lines.
+                output = " ".join(outlines)  # make it all one line, separated by a space.
+                output = utils.str.normalizeWhitespace(output)  # have no doublespaces.
+                irc.reply("{0} :: {1}".format(repodir, out))
+            else:  # less than six lines.
+                for outline in outlines:  # output each line.
+                    irc.reply(outline)
         else:  # error.
             error = error.replace('\n', ' ')  # replace newlines to spaces.
             error = utils.str.normalizeWhitespace(error)  # make sure no doublespaces.

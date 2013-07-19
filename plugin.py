@@ -61,9 +61,9 @@ class GitPull(callbacks.Plugin):
                 output = utils.str.normalizeWhitespace(output)  # have no doublespaces.
                 irc.reply("{0} :: {1}".format(repodir, out))
             else:  # less than six lines.
+                self.log.info("outlines: {0}".format(outlines))
                 for outline in outlines:  # output each line.
-                    if len(outline) != 0:  # don't send blank lines.
-                        irc.reply(outline)
+                    irc.reply(outline)
         else:  # error.
             error = error.replace('\n', ' ')  # replace newlines to spaces.
             error = utils.str.normalizeWhitespace(error)  # make sure no doublespaces.

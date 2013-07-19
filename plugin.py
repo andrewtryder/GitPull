@@ -61,6 +61,7 @@ class GitPull(callbacks.Plugin):
                 output = utils.str.normalizeWhitespace(output)  # have no doublespaces.
                 irc.reply("{0} :: {1}".format(repodir, out))
             else:  # less than six lines.
+                self.log.info("less than six lines")
                 for outline in outlines:  # output each line.
                     irc.reply(outline)
         else:  # error.

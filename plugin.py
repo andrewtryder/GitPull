@@ -57,13 +57,13 @@ class GitPull(callbacks.Plugin):
         if return_code == 0:  # command worked.
             outlines = out.split('\n')  # split on newlines into list.
             if len(outlines) > 6:  # more than six lines.
-                output = " ".join(outlines)  # make it all one line, separated by a space.
+                output = " ".join(outlines.strip())  # make it all one line, separated by a space.
                 output = utils.str.normalizeWhitespace(output)  # have no doublespaces.
-                irc.reply("{0} :: {1}".format(repodir, out))
+                irc.reply("{0} :: {1}".format(repodir, output))
             else:  # less than six lines.
-                self.log.info("outlines: {0}".format(outlines))
                 for outline in outlines:  # output each line.
-                    irc.reply(outline)
+                    if outline != '':  # don't output blank lines:
+                        irc.reply(outline.strip())
         else:  # error.
             error = error.replace('\n', ' ')  # replace newlines to spaces.
             error = utils.str.normalizeWhitespace(error)  # make sure no doublespaces.

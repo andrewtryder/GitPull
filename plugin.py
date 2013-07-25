@@ -70,7 +70,7 @@ class GitPull(callbacks.Plugin):
                 else:  # less than six lines.
                     for outline in outlines:  # output each line.
                         if outline != '':  # don't output blank lines:
-                            irc.reply(outline.strip())
+                            irc.reply("{0} :: {1}".format(workdir, outline.strip()))
             else:  # error.
                 error = error.replace('\n', ' ')  # replace newlines to spaces.
                 error = utils.str.normalizeWhitespace(error)  # make sure no doublespaces.

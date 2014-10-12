@@ -64,7 +64,7 @@ class GitPull(callbacks.Plugin):
             if return_code == 0:  # command worked.
                 outlines = out.split('\n')  # split on newlines into list.
                 if len(outlines) > 6:  # more than six lines.
-                    output = " ".join([i.strip() for i in outlines])  # make it all one line, separated by a space.
+                    output = " ".join([i for i in outlines])  # make it all one line, separated by a space.
                     output = utils.str.normalizeWhitespace(output)  # have no doublespaces.
                     irc.reply("{0} :: {1}".format(workdir, output))
                 else:  # less than six lines.

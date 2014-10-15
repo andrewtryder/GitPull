@@ -7,6 +7,8 @@
 # my libs.
 import subprocess
 import os
+import sys
+import locale
 # extra supybot libs.
 import supybot.conf as conf
 # supybot libs.
@@ -62,7 +64,13 @@ class GitPull(callbacks.Plugin):
             return_code = pipe.wait()
             # check if command worked or not.
             if return_code == 0:  # command worked.
-                outlines = out.split('\n')  # split on newlines into list.
+                # work around for py2/py3
+                if sys.version_info[0] == 2:  # py2 and above.
+                    outlines = out.split('\n')  # split on newlines into list.
+                else:  # py3 and above.
+                    encoding = locale.getdefaultlocale()[1]  # default encoding (should be utf-8)
+                    outlines = out.decode(encoding).split('\n')
+                # now continue
                 if len(outlines) > 6:  # more than six lines.
                     output = " ".join([i for i in outlines])  # make it all one line, separated by a space.
                     output = utils.str.normalizeWhitespace(output)  # have no doublespaces.

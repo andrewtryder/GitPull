@@ -13,7 +13,7 @@ script:
   - cd .. && supybot-test GitPull
 notifications:
     email: false
-    # irc: "irc.efnet.net#supybot"
+    irc: "irc.efnet.net#supybot"
     webhooks: http://n.tkte.ch/h/3507/yuWAKzM9WUfo3x6aLj48amxK
 matrix:
     fast_finish: true

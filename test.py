@@ -14,7 +14,7 @@ class GitPullTestCase(PluginTestCase):
         self.assertResponse('updateplugin GitPull', 'GitPull :: Already up-to-date.')
     
     def testGitPullError(self):
-        self.assertRegexp('updateplugin HELLO2U', "ERROR: \'HELLO\' is an invalid plugin")
+        self.assertError('updateplugin HELLO2U') #, "ERROR: \'HELLO\' is an invalid plugin")
     
 
 

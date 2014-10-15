@@ -57,7 +57,7 @@ You must be an owner on the bot to run the updateplugin command.
 
 ```
 <spline> @updateplugin all
-<spline> @updateplugin Git Pull
+<spline> @updateplugin GitPull
 ```
 
 ## About
